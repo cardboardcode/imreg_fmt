@@ -1,6 +1,6 @@
 #include <imreg_fmt/image_registration.h>
+#include <opencv2/opencv.hpp>
 #include <opencv2/core/eigen.hpp>
-
 
 ImageRegistration::ImageRegistration(const cv::Mat &im) :
     rows_(im.rows), cols_(im.cols), log_polar_size_(std::max(rows_, cols_)),
@@ -37,7 +37,9 @@ void ImageRegistration::registerImage(const cv::Mat &im, cv::Mat &registered_ima
 
     if (display_images)
     {
-        cv::imshow("im0_rotated", im0_rotated_);
+        cv::Mat output_image;
+        im0_rotated_.convertTo(output_image, CV_8UC1, 255, 0);
+        cv::imwrite("im0_rotated.png", output_image);
     }
 
     imdft_.phaseCorrelate(im1_gray_, im0_rotated_, t_row, t_col);
@@ -48,7 +50,9 @@ void ImageRegistration::registerImage(const cv::Mat &im, cv::Mat &registered_ima
 
     if (display_images)
     {
-        cv::imshow("im0_registered", registered_image);
+        cv::Mat output_image;
+        registered_image.convertTo(output_image, CV_8UC1, 255, 0);
+        cv::imwrite("im0_registered.png", output_image);
     }
 }
 

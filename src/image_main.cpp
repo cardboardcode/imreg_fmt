@@ -15,8 +15,8 @@ int main(int argc, char **argv)
     im0 = cv::imread(argv[1], cv::IMREAD_COLOR);
     im1 = cv::imread(argv[2], cv::IMREAD_COLOR);
 
-    cv::imshow("im0", im0);
-    cv::imshow("im1", im1);
+    cv::imwrite("im0.png", im0);
+    cv::imwrite("im1.png", im1);
 
     ImageRegistration image_registration(im0);
 
@@ -32,7 +32,9 @@ int main(int argc, char **argv)
 
     cv::Mat overlay_image;
     cv::addWeighted(image_registration.getCurrentImage(), 0.5, registered_image, 0.5, 0.0, overlay_image);
-    cv::imshow("overlay_image", overlay_image);
+    cv::Mat output_image;
+    overlay_image.convertTo(output_image, CV_8UC1, 255, 0);
+    cv::imwrite("overlay_image.png", output_image);
 
     cv::waitKey(0);
     return 0;
