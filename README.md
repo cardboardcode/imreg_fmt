@@ -27,6 +27,8 @@ Mac OS X
 Run
 ---
     ./image_main <path to first image> <path to second image>
+    # For saving the image registration images, use the command below:
+    ./image_main <path to first image> <path to second image> --save-result
     ./video_main <path to video>
 
 License
