@@ -2,6 +2,16 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/eigen.hpp>
 
+ImageRegistration::ImageRegistration(const cv::Mat &im, const bool input_isSaveMode) :
+    rows_(im.rows), cols_(im.cols), log_polar_size_(std::max(rows_, cols_)),
+    imdft_(rows_, cols_), imdft_logpolar_(log_polar_size_, log_polar_size_),
+    image_transforms_(rows_, cols_, log_polar_size_, log_polar_size_)
+{
+    isSaveMode = input_isSaveMode;
+    high_pass_filter_ = imdft_.getHighPassFilter();
+    initialize(im);
+}
+
 ImageRegistration::ImageRegistration(const cv::Mat &im) :
     rows_(im.rows), cols_(im.cols), log_polar_size_(std::max(rows_, cols_)),
     imdft_(rows_, cols_), imdft_logpolar_(log_polar_size_, log_polar_size_),
@@ -37,9 +47,15 @@ void ImageRegistration::registerImage(const cv::Mat &im, cv::Mat &registered_ima
 
     if (display_images)
     {
-        cv::Mat output_image;
-        im0_rotated_.convertTo(output_image, CV_8UC1, 255, 0);
-        cv::imwrite("im0_rotated.png", output_image);
+        if (isSaveMode) {
+          cv::Mat output_image;
+          im0_rotated_.convertTo(output_image, CV_8UC1, 255, 0);
+          cv::imwrite("im0_rotated.png", output_image);
+          std::cout << "Written to file [ im0_rotated.png ]" << std::endl;
+        } else {
+          cv::imshow("im0_rotated", im0_rotated_);
+        }
+
     }
 
     imdft_.phaseCorrelate(im1_gray_, im0_rotated_, t_row, t_col);
@@ -50,9 +66,15 @@ void ImageRegistration::registerImage(const cv::Mat &im, cv::Mat &registered_ima
 
     if (display_images)
     {
-        cv::Mat output_image;
-        registered_image.convertTo(output_image, CV_8UC1, 255, 0);
-        cv::imwrite("im0_registered.png", output_image);
+        if (isSaveMode) {
+          cv::Mat output_image;
+          registered_image.convertTo(output_image, CV_8UC1, 255, 0);
+          cv::imwrite("im0_registered.png", output_image);
+          std::cout << "Written to file [ im0_registered.png ]" << std::endl;
+        } else {
+          cv::imshow("im0_registered", registered_image);
+        }
+
     }
 }
 

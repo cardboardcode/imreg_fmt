@@ -10,6 +10,7 @@
 class ImageRegistration
 {
     public:
+        ImageRegistration(const cv::Mat &im, const bool input_isSaveMode);
         ImageRegistration(const cv::Mat &im);
         virtual ~ImageRegistration();
         void initialize(const cv::Mat &im);
@@ -55,6 +56,8 @@ class ImageRegistration
         cv::Mat im0_logpolar_;
         cv::Mat im1_logpolar_;
         cv::Mat im0_rotated_;
+
+        bool isSaveMode = false;
 
 };
 
